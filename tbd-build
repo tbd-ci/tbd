@@ -26,7 +26,7 @@ result_writer() {
   treeish=$1
 
   echo appending note to $treeish >&2
-  git notes append -m"$input" $treeish
+  git notes --ref=tbd append -m"$input" $treeish
 }
 
 config_parser() {
