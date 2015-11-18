@@ -1,0 +1,19 @@
+#!/bin/bash
+
+runner() {
+  [[ $# -ne 2 ]] && echo 'USAGE: runner script treeish_id' && return 1
+
+  # Steps
+  # checkout to tmpdir
+  # run script
+  # output result
+
+  temp_dir=$(mktemp -d --suffix tbd)
+  echo $temp_dir
+
+  git --work-tree $temp_dir checkout $2 -- .
+
+  (cd $temp_dir && $1)
+
+}
+
