@@ -1,0 +1,17 @@
+#!/bin/bash
+
+result_writer() {
+  [[ -t 0 ]] ||
+    input=$(cat)
+
+  if [[ -z $input ]]
+  then
+    echo no input received >&2
+    return 1
+  fi
+
+  if [[ -z $1 ]]; then echo USAGE: result_writer treeish_id && return 1; fi
+  treeish=$1
+
+  git notes append -m"$input" $treeish
+}
