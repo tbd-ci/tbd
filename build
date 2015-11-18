@@ -1,0 +1,39 @@
+#!/bin/bash
+
+runner() {
+  [[ $# -ne 2 ]] && echo 'USAGE: runner script treeish_id' && return 1
+
+  temp_dir=$(mktemp -d --suffix tbd)
+
+  git --work-tree $temp_dir checkout $2 -- .
+
+  (cd $temp_dir && $1)
+
+}
+
+result_writer() {
+  [[ -t 0 ]] ||
+    input=$(cat)
+
+  if [[ -z $input ]]
+  then
+    echo no input received >&2
+    return 1
+  fi
+
+  if [[ -z $1 ]]; then echo USAGE: result_writer treeish_id && return 1; fi
+  treeish=$1
+
+  git notes append -m"$input" $treeish
+}
+
+config_parser() {
+  echo ci/specs/run
+}
+
+tree=HEAD^{tree}
+
+for script in $(config_parser)
+do
+  runner $script $tree | result_writer $tree
+done
