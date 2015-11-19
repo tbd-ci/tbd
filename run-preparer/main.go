@@ -1,11 +1,14 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os/exec"
 )
+
+var treeIsh = flag.String("treeish", "HEAD^{tree}", "treeish (tree/commit) id or ref")
 
 func CheckoutProject(treeId string) (tmpDir string) {
 	tmpDir, err := ioutil.TempDir("/tmp", "tbd")
@@ -33,6 +36,6 @@ func CheckoutProject(treeId string) (tmpDir string) {
 }
 
 func main() {
-	tmpDir := CheckoutProject("HEAD")
-	fmt.Println(tmpDir)
+	tmpDir := CheckoutProject(*treeIsh)
+	fmt.Print(tmpDir)
 }
