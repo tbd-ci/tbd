@@ -3,7 +3,7 @@
 runner() {
   [[ $# -ne 2 ]] && echo 'USAGE: runner script treeish_id' && return 1
 
-  temp_dir=$(mktemp -d --suffix tbd)
+  temp_dir=$(mktemp -d)
 
   git --work-tree $temp_dir checkout $2 -- .
 
