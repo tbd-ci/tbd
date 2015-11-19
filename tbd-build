@@ -8,7 +8,7 @@ runner() {
   git --work-tree $temp_dir checkout $2 -- .
 
   echo Running $1 in $temp_dir >&2
-  (cd $temp_dir && $1)
+  cd $temp_dir && git init && git add -A . && $1 && cd -
 
 }
 
