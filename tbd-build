@@ -1,16 +1,7 @@
 #!/bin/bash
 
-runner() {
-  [[ $# -ne 2 ]] && echo 'USAGE: runner script treeish_id' && return 1
-
-  temp_dir=$(mktemp -d)
-
-  git --work-tree $temp_dir checkout $2 -- .
-
-  echo Running $1 in $temp_dir >&2
-  cd $temp_dir && git init && git add -A . && $1 && cd -
-
-}
+go install ./runner
+go install ./run-preparer
 
 result_writer() {
   [[ -t 0 ]] ||
@@ -29,16 +20,6 @@ result_writer() {
   git notes --ref=tbd append -m"$input" $treeish
 }
 
-config_parser() {
-  for dir in $(ls ci)
-  do
-    echo ci/${dir}/run
-  done
-}
-
 tree=HEAD^{tree}
 
-for script in $(config_parser)
-do
-  runner $script $tree | result_writer $tree
-done
+run-preparer --treeish $tree | runner | result_writer $tree
