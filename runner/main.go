@@ -1,57 +1,55 @@
 package main
 
 import (
-	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path"
 )
 
 func main() {
-	a := Runner("/work-space/work/rea/tbd-test-repo/")
-	fmt.Println(a)
+	a := Runner()
+	b, err := json.Marshal(a)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
 }
 
-type success bool
-
 type ResultStep struct {
-	Success     success `json:"status"`
-	StdErr      string  `json:"standardError"`
-	StdOut      string  `json:standardOut`
-	CombinedStd string  `json:combinedStd`
+	Success bool   `json:"status"`
+	Stage   string `json:"stage"`
+	Output  string `json:"combinedStd"`
 }
 
 type Result struct {
-	OverallSuccess success      `json:overallSuccess`
-	Steps          []ResultStep `json:steps`
+	OverallSuccess bool         `json:"overallSuccess"`
+	Steps          []ResultStep `json:"steps"`
 }
 
-func Runner(path string) (res Result) {
-	ciPath := path + "ci/"
+func Runner() (res Result) {
+	res.OverallSuccess = true
+
+	ciPath := "ci/"
 
 	for _, step := range steps(ciPath) {
 		resultStep := ResultStep{}
-		var stdOut bytes.Buffer
-		var stdErr bytes.Buffer
 
-		rawCmd := ciPath + step.Name() + "/run"
+		resultStep.Stage = step.Name()
+
+		rawCmd := path.Join(ciPath + step.Name() + "/run")
 		cmd := exec.Command(rawCmd)
 
 		combinedStd, err := cmd.CombinedOutput()
-		cmd.Stdout = &stdOut
-		cmd.Stderr = &stdErr
-
 		if err != nil {
 			res.OverallSuccess = false
 			resultStep.Success = false
-			resultStep.StdErr = stdErr.String()
-			resultStep.CombinedStd = string(combinedStd)
+			resultStep.Output = string(combinedStd)
 		} else {
-			fmt.Println(err)
 			resultStep.Success = true
-			resultStep.StdOut = stdOut.String()
-			resultStep.CombinedStd = string(combinedStd)
+			resultStep.Output = string(combinedStd)
 		}
 
 		res.Steps = append(res.Steps, resultStep)
