@@ -1,0 +1,18 @@
+{
+	"ImportPath": "github.com/tbd-ci/tbd",
+	"GoVersion": "go1.5",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/deckarep/golang-set",
+			"Comment": "v1.5",
+			"Rev": "52ba7f28f319e9d560acbf47c7fcf9b9ee7aa7d3"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "74f810a0152f4c50a16195f6b9ff44afc35594e8"
+		}
+	]
+}
