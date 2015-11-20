@@ -1,8 +1,5 @@
 #!/bin/bash
 
-go install ./runner
-go install ./run-preparer
-
 result_writer() {
   [[ -t 0 ]] ||
     input=$(cat)
@@ -16,8 +13,8 @@ result_writer() {
   if [[ -z $1 ]]; then echo USAGE: result_writer treeish_id && return 1; fi
   treeish=$1
 
-  echo appending note to $treeish >&2
-  git notes --ref=tbd append -m"$input" $treeish
+  echo write note to $treeish >&2
+  git notes --ref=tbd add -f -m"$input" $treeish
 }
 
 tree=HEAD^{tree}
