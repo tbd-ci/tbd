@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 )
@@ -25,19 +24,22 @@ func main() {
 
 	cmd := exec.Command("git", "notes", "--ref", "tbd", "show", treeish+"^{tree}")
 	output, err := cmd.CombinedOutput()
-
 	if err != nil {
-		log.Fatalf("%s", string(output))
+		fmt.Printf("%s", string(output))
+		os.Exit(-1)
 	}
 
 	result := Result{}
 	if err := json.Unmarshal(output, &result); err != nil {
-		log.Fatal("tbd-status - json: %s", err, err)
+		fmt.Printf("%s", err)
+		os.Exit(-1)
 	}
 
 	if result.OverallSuccess {
+		fmt.Print("success")
 		os.Exit(0)
 	} else {
+		fmt.Print("failed")
 		os.Exit(1)
 	}
 }
