@@ -25,13 +25,13 @@ func main() {
 	cmd := exec.Command("git", "notes", "--ref", "tbd", "show", treeish+"^{tree}")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("%s", string(output))
+		fmt.Print("not run")
 		os.Exit(-1)
 	}
 
 	result := Result{}
 	if err := json.Unmarshal(output, &result); err != nil {
-		fmt.Printf("%s", err)
+		fmt.Print("not run")
 		os.Exit(-1)
 	}
 
