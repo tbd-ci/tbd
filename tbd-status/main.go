@@ -19,11 +19,13 @@ func main() {
 
 	if len(os.Args) != 2 {
 		fmt.Println(usage())
+		return
 	}
 	treeish := os.Args[1]
 
 	cmd := exec.Command("git", "notes", "--ref", "tbd", "show", treeish+"^{tree}")
 	output, err := cmd.CombinedOutput()
+
 	if err != nil {
 		log.Fatalf("%s", string(output))
 	}
