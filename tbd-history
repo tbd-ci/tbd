@@ -1,0 +1,11 @@
+#!/bin/bash
+
+IFS=$'\n'
+
+
+git log --pretty=tformat:'%h %s' | \
+while read -r line
+do
+
+  sed "s/\(^[^ ]*\)/\1 $(tbd-status \\1)/g"
+done | less
